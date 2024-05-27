@@ -1,0 +1,28 @@
+<div class="row g-0 justify-content-center align-items-center" style="height: 100vh">
+  <div class="col-md-4">
+    <h5 class="text-center mb-4">SBank • A micro bank system</h5>
+    <div class="alert alert-danger" role="alert" *ngIf="authStatus == false">
+      Le nom d'utilisateur ou mot de passe est incorrest
+    </div>
+    <div class="card">
+      <div class="card-body py-5 px-4">
+        <div class="text-center mb-5">
+          <h4 class="fw-bold mb-1">Se connecter</h4>
+          <p class="text-muted small">Se connecter à votre compte SBank</p>
+        </div>
+        <form (ngSubmit)="handleLogin()" [formGroup]="formGroup">
+          <div class="form-floating mb-3">
+            <input type="text" formControlName="username" class="form-control" id="username" placeholder="Saisir le nom d'utilisateur">
+            <label class="d-block mb-1" for="username">Nom d'utilisateur</label>
+          </div>
+          <div class="form-floating mb-4">
+            <input type="password" formControlName="password" class="form-control" id="password" placeholder="Mot de passe">
+            <label class="d-block mb-1" for="password">Mot de passe</label>
+          </div>
+          <button type="submit" [disabled]="formGroup.invalid" class="btn py-2 w-100 btn-primary">Se connecter</button>
+        </form>
+      </div>
+    </div>
+    <p class="text-center small mt-3 mb-0 text-muted">SBank © Tous les droits réservés 2024</p>
+  </div>
+</div>

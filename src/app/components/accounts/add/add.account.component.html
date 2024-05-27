@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="col-md-7">
+    <div class="mb-5">
+      <h4 class="fw-bold mb-1">Créer compte</h4>
+      <p class="small text-muted">Créer un nouveau compte sur la banque</p>
+    </div>
+    <form [formGroup]="formGroup" (ngSubmit)="handleSubmit()">
+      <div class="row mb-4">
+        <label for="balance" class="col-sm-3 col-form-label">Motant initiale</label>
+        <div class="col-sm-9">
+          <input type="number" formControlName="balance" id="balance" class="form-control">
+          <p class="small text-muted mt-1">Le motant initiale doit être en dirhams marocain (Dhs)</p>
+        </div>
+      </div>
+      <div class="row mb-4">
+        <label for="customer" class="col-sm-3 col-form-label">Client</label>
+        <div class="col-sm-9">
+          <select class="form-select" id="customer" formControlName="customerDto">
+            <option [ngValue]="customer" *ngFor="let customer of customers">{{ customer.name }}</option>
+          </select>
+          <p class="small text-muted mt-2 mb-0">Choisir un des nods clients propriétaire du compte</p>
+          <button class="link-primary bg-transparent border-0 small p-0">Nouveau client ?</button>
+        </div>
+      </div>
+      <div class="row mb-4">
+        <div class="col-sm-3">
+          <p class="mb-3">Type de compte</p>
+        </div>
+        <div class="col-sm-9">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" formControlName="type" id="type-1" value="SavingAccount" checked>
+            <label class="form-check-label" for="type-1">Compte d'épargne</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" formControlName="type" id="type-2" value="CurrentAccount">
+            <label class="form-check-label" for="type-2">Compte courant</label>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-4" *ngIf="formGroup.value.type == 'CurrentAccount'">
+        <label for="interestRate" class="col-sm-3 col-form-label">Taux d'intérét</label>
+        <div class="col-sm-9">
+          <input type="number" formControlName="interestRate" id="interestRate" placeholder="" class="form-control">
+        </div>
+      </div>
+      <div class="row mb-4" *ngIf="formGroup.value.type == 'SavingAccount'">
+        <label for="overDraft" class="col-sm-3 col-form-label">Découvert</label>
+        <div class="col-sm-9">
+          <input type="number" formControlName="overDraft" id="overDraft" placeholder="" class="form-control">
+        </div>
+      </div>
+      <button class="btn btn-primary fw-medium px-4" type="submit">Créer compte</button>
+    </form>
+  </div>
+</div>

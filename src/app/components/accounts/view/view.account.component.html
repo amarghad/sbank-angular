@@ -1,0 +1,91 @@
+<div *ngIf="account">
+  <div class="d-flex align-items-center justify-content-between mb-5">
+    <div>
+      <h5 class="fw-bold mb-1">Compte n° : {{ account.id }}</h5>
+      <span class="badge" [ngClass]="{
+          'text-bg-info': account.status == AccountStatus.ACTIVATED,
+          'text-bg-primary': account.status == AccountStatus.CREATED,
+          'text-bg-warning': account.status == AccountStatus.SUSPENDED
+      }">{{ account.status }}</span>
+      <div class="mt-1 mb-3">
+        <small>{{ account.customerDto.name }}</small>
+      </div>
+    </div>
+    <div class="text-end">
+      <i class="small">Motant totale</i>
+      <h5 class="fw-bold" [ngClass]="{'text-success' : account.balance >= 0,'text-danger' : account.balance < 0,}">{{ account.balance | number:'1.2-2' }} MAD</h5>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <ul class="list-group">
+        <li class="list-group-item">
+          <div class="row py-1">
+            <div class="col-md-2"><span>N°</span></div>
+            <div class="col-md-4"><span>Date d'opération</span></div>
+            <div class="col-md-6 text-end"><span>Motant</span></div>
+          </div>
+        </li>
+        @if (operations && operations.length > 0) {
+        <li class="list-group-item" *ngFor="let operation of operations">
+          <div class="row py-1">
+            <div class="col-md-2"><span>{{ operation.id }}</span></div>
+            <div class="col-md-4"><span>{{ operation.date | date }}</span></div>
+            <div class="col-md-6 text-end">
+              <span [ngClass]="{
+                  'text-danger': operation.type === 'DEBIT',
+                  'text-success': operation.type === 'CREDIT'
+                }">
+                  {{ operation.type === 'DEBIT' ? '-' : '+' }}{{ operation.amount | number:'1.2-2' }} MAD
+                </span>
+            </div>
+          </div>
+        </li>
+        } @else {
+          <li class="list-group-item text-center py-4">
+            <h6>Aucune opération effectué</h6>
+            <small class="text-muted">À ce moment, aucune opération est effectué dans ce compte</small>
+          </li>
+        }
+      </ul>
+    </div>
+    <div class="col-md-4" *ngIf="authService.roles.includes('ADMIN')">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="card-title py-2 mb-0">Effectuer opération</h6>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="operationFormGroup" (ngSubmit)="handleSaveOperation()">
+            <div class="mb-3">
+              <p class="mb-2.5">Type d'opération</p>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" formControlName="type" name="type" id="op-t-1" value="CREDIT">
+                <label class="form-check-label" for="op-t-1">Crédit</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" formControlName="type" name="type" id="op-t-2" value="DEBIT">
+                <label class="form-check-label" for="op-t-2">Débit</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" formControlName="type" name="type" id="op-t-3" value="TRANSFER">
+                <label class="form-check-label" for="op-t-3">Transfert</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="amount" class="form-label">Motant</label>
+              <input type="number" formControlName="amount" name="amount" placeholder="1234.56" class="form-control" id="amount">
+            </div>
+            <div class="mb-3" *ngIf="operationFormGroup.get('type')?.value == 'TRANSFER'">
+              <label for="dest" class="form-label">Compte du destination</label>
+              <input type="text" class="form-control" name="dest" formControlName="dest" id="dest" aria-describedby="dest">
+              <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <button class="btn btn-primary" type="submit" [disabled]="operationFormGroup.invalid">Enregistrer opération</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
